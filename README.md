@@ -36,7 +36,7 @@ terminal, with zero configuration.
  
 ---
  
-## 2. Goals
+## Goals
  
 ### Stage 1   Local Developer Tool (current focus)
 - Attach to any running Linux process by PID, or launch a process and attach immediately
