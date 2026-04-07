@@ -1,8 +1,8 @@
 [workspace]
 members = [
     "cli",
-    "nusku-core",
-    "nusku-ebpf",
+    "engine",
+    "profiler",
 ]
 resolver = "2"
 
