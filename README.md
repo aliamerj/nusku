@@ -4,14 +4,30 @@ in your terminal. Zero configuration, single binary, works on any Linux process.
 
  
 ```
-── PID 4821 ── 99 samples ─────────────────────────
- %CPU  FUNCTION
-──────────────────────────────────────────────────────────────────────
-38.2%  handle_request  proxy.zig:142
-21.4%  ssl_handshake   wolfssl/ssl.c:891
-18.1%  thread_pool_dispatch  pool.zig:67
- 9.3%  epoll_wait  [kernel]
- 7.0%  parse_headers  proxy.zig:89
+── PID 132612 ── 98 samples ── CPU  99.0% ── RSS 2.0 MiB ── VIRT 3.1 MiB ──
+     %     COUNT  FUNCTION                          SOURCE                           ADDRESS
+────────────────────────────────────────────────────────────────────────────────────────────────
+ 27.6%        27  <core::ops::range::Range<T> as …  range.rs:773          0x00005efa8cfd4b95
+ 11.2%        11  testing::hot_c                    main.rs:7             0x00005efa8cfd4cc7
+ 10.2%        10  <i32 as core::iter::range::Step…  range.rs:197          0x00005efa8cfd4acd
+ 10.2%        10  <core::ops::range::Range<T> as …  range.rs:775          0x00005efa8cfd4b9f
+  9.2%         9  testing::hot_c                    main.rs:8             0x00005efa8cfd4cf0
+  6.1%         6  <core::ops::range::Range<T> as …  range.rs:771          0x00005efa8cfd4b69
+  5.1%         5  <i32 as core::iter::range::Step…  range.rs:198          0x00005efa8cfd4b0b
+  4.1%         4  core::hint::black_box             hint.rs:482           0x00005efa8cfd4d5a
+  4.1%         4  core::iter::range::<impl core::…  range.rs:856          0x00005efa8cfd4b40
+  3.1%         3  <core::ops::range::Range<T> as …  range.rs:776          0x00005efa8cfd4bba
+  2.0%         2  <core::ops::range::Range<T> as …  range.rs:772          0x00005efa8cfd4b7a
+  2.0%         2  <core::ops::range::Range<T> as …  range.rs:780          0x00005efa8cfd4bce
+  2.0%         2  testing::hot_c                    main.rs:9             0x00005efa8cfd4d09
+  2.0%         2  <i32 as core::iter::range::Step…  range.rs:195          0x00005efa8cfd4ac4
+  1.0%         1  core::hint::black_box             hint.rs:483           0x00005efa8cfd4d64
+
+Top frame:
+  <core::ops::range::Range<T> as core::iter::range::RangeIteratorImpl>::spec_next
+  /home/ali/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/range.rs
+  line 773
+
 ```
  
 ---
