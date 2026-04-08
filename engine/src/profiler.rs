@@ -27,7 +27,7 @@ impl Profiler {
 
         Ok(Self {
             cpu: CPU::new(pid, rate_hz),
-            wind: SampleWindow::new(),
+            wind: SampleWindow::new(pid, rate_hz),
             symbols: Symbols::new(pid),
             last_tick: Instant::now(),
         })
