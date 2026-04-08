@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+profiler = {path = "../profiler"}
 anyhow    = { workspace = true }
 libc = {workspace = true}
+blazesym = {workspace = true}
 

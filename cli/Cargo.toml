@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 engine = {path = "../engine"}
+profiler = {path = "../profiler"}
 anyhow    = { workspace = true }
 clap      = { workspace = true }
 tokio     = { workspace = true }
