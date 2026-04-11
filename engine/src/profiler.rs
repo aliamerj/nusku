@@ -27,7 +27,7 @@ impl Profiler {
 
         Ok(Self {
             cpu: CPU::new(pid, rate_hz),
-            wind: SampleWindow::new(pid, rate_hz),
+            wind: SampleWindow::new(pid),
             symbols: Symbols::new(pid),
             last_tick: Instant::now(),
         })
@@ -36,7 +36,7 @@ impl Profiler {
     pub fn listen<F>(
         &mut self,
         duration_sec: Option<u64>,
-        running: Arc<AtomicBool>,
+        stop: Arc<AtomicBool>,
         mut on_profile: F,
     ) -> Result<()>
     where
@@ -48,14 +48,10 @@ impl Profiler {
         let symbols = &mut self.symbols;
         let last_tick = &mut self.last_tick;
 
-        self.cpu.run(|event| {
-            if !running.load(Ordering::SeqCst) {
-                return;
-            }
-
+        self.cpu.run(stop.clone(), |event| {
             if let Some(secs) = duration_sec {
                 if start.elapsed() > Duration::from_secs(secs) {
-                    running.store(false, Ordering::SeqCst);
+                    stop.store(true, Ordering::SeqCst);
                     return;
                 }
             }
@@ -65,7 +61,6 @@ impl Profiler {
             if last_tick.elapsed() >= Duration::from_secs(1) {
                 let snapshot = agg.snapshot(symbols);
                 on_profile(snapshot);
-                agg.reset();
                 *last_tick = Instant::now();
             }
         })

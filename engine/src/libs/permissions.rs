@@ -4,7 +4,6 @@ use anyhow::{bail, Context, Result};
 
 pub fn check_environment() -> Result<()> {
     check_kernel()?;
-    check_perf_event_paranoid()?;
     check_privileges()?;
     Ok(())
 }
@@ -22,24 +21,6 @@ fn check_kernel() -> Result<()> {
         if major < 4 || (major == 4 && minor < 9) {
             bail!("Linux kernel ≥ 4.9 required for eBPF profiling");
         }
-    }
-
-    Ok(())
-}
-
-fn check_perf_event_paranoid() -> Result<()> {
-    let val = read_to_string("/proc/sys/kernel/perf_event_paranoid")
-        .context("failed to read perf_event_paranoid")?;
-
-    let level: i32 = val.trim().parse().unwrap_or(3);
-
-    if level > 2 {
-        bail!(
-            "perf_event_paranoid is too restrictive ({}).\n\
-             Run:\n\
-             sudo sysctl -w kernel.perf_event_paranoid=1",
-            level
-        );
     }
 
     Ok(())

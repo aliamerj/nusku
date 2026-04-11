@@ -16,7 +16,6 @@ pub struct HotFrame {
 pub struct CpuSnapshot {
     pub total_samples: u64,
     pub frames: Vec<HotFrame>, // sorted by count descending
-    pub cpu_percent: f64,      // 0.0–100.0, estimated from sample rate
 }
 
 /// Memory data read from /proc/pid/status

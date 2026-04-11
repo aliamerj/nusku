@@ -12,3 +12,5 @@ tokio     = { workspace = true }
 tracing  = { workspace = true }
 tracing-subscriber  = { workspace = true }
 ctrlc = { workspace = true}
+crossterm = "0.29.0"
+ratatui = "0.30.0"

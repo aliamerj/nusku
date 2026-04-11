@@ -16,16 +16,14 @@ pub struct SampleWindow {
     pid: u32,
     counts: HashMap<u64, u64>, // top-of-stack address → sample count
     total: u64,
-    rate_hz: u64, // needed to estimate cpu_percent
 }
 
 impl SampleWindow {
-    pub fn new(pid: u32, rate_hz: u64) -> Self {
+    pub fn new(pid: u32) -> Self {
         Self {
             pid,
             counts: HashMap::new(),
             total: 0,
-            rate_hz,
         }
     }
 
@@ -61,7 +59,6 @@ impl SampleWindow {
     }
 
     fn build_cpu_snapshot(&self, symbols: &mut Symbols) -> CpuSnapshot {
-        // Group by resolved symbol name so inlined duplicates merge correctly
         let mut grouped: HashMap<
             String,
             (
@@ -106,34 +103,24 @@ impl SampleWindow {
                 } else {
                     (count as f64 / self.total as f64) * 100.0
                 };
-
                 HotFrame {
                     symbol,
                     name,
                     file,
+                    file_full,
                     line,
                     addr,
                     count,
                     percent,
-                    file_full,
                 }
             })
             .collect();
 
         frames.sort_by(|a, b| b.count.cmp(&a.count));
 
-        // Estimate CPU% from samples collected vs expected at this rate
-        // If we got 99 samples in 1 second at 99hz → 100% on one core
-        let cpu_percent = if self.rate_hz > 0 {
-            ((self.total as f64 / self.rate_hz as f64) * 100.0).min(100.0)
-        } else {
-            0.0
-        };
-
         CpuSnapshot {
             total_samples: self.total,
             frames,
-            cpu_percent,
         }
     }
 }

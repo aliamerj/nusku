@@ -8,7 +8,16 @@ use perf_event_open_sys::bindings::{
     perf_event_attr, PERF_COUNT_SW_CPU_CLOCK, PERF_FLAG_FD_CLOEXEC, PERF_TYPE_SOFTWARE,
 };
 use plain::Plain;
-use std::{io::Error, mem::MaybeUninit, os::fd::AsFd, time::Duration};
+use std::{
+    io::Error,
+    mem::MaybeUninit,
+    os::fd::AsFd,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::Duration,
+};
 
 /// Mirror of `cpu_event` in cpu_sampler.bpf.c
 /// Layout must match exactly — same field order, same sizes.
@@ -42,7 +51,7 @@ impl CPU {
         Self { pid, rate_hz }
     }
 
-    pub fn run<F>(&self, mut on_event: F) -> Result<()>
+    pub fn run<F>(&self, stop: Arc<AtomicBool>, mut on_event: F) -> Result<()>
     where
         F: FnMut(CpuSample),
     {
@@ -114,10 +123,11 @@ impl CPU {
         let ring = rb_builder.build().context("failed to build ring buffer")?;
 
         // 5. Poll until interrupted
-        loop {
+        while !stop.load(Ordering::SeqCst) {
             match ring.poll(Duration::from_millis(100)) {
                 Ok(_) => {}
-                Err(e) if e.kind() == ErrorKind::Interrupted => break,
+                Err(e) if e.kind() == ErrorKind::Interrupted => continue,
+                Err(e) if e.kind() == ErrorKind::InvalidInput => break,
                 Err(e) => bail!("ring buffer poll error: {e}"),
             }
         }
