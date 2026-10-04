@@ -1,11 +1,10 @@
-// VitePress resolves this project-level config first. Keep the site settings
-// in one place so local development and production builds cannot drift.
+// Keep the site settings with the VitePress theme and build configuration.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { join, relative, sep } from 'node:path'
 import { defineConfig } from 'vitepress'
 
-const docsRoot = fileURLToPath(new URL('.', import.meta.url))
+const docsRoot = fileURLToPath(new URL('../', import.meta.url))
 type Doc = { text: string; link: string; date?: string }
 
 function titleFor(file: string) {
@@ -39,9 +38,10 @@ function collect(folder: string): Doc[] {
 
 const documentation = collect('documentation')
 const devlog = collect('devlog')
+const base = process.env.GITHUB_REPOSITORY === 'nusku-tools/nusku-tools.github.io' ? '/' : '/nusku/'
 
 export default defineConfig({
-  base: '/nusku/',
+  base,
   title: 'Nusku',
   description: 'A continuous profiling system for Linux, built in Zig and eBPF.',
   cleanUrls: true,
