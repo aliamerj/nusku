@@ -129,6 +129,7 @@ pub const FlagValues = struct {
 /// What a command's `run` function receives. All output goes through the two
 /// writers so commands never touch the process streams directly.
 pub const Context = struct {
+    io: std.Io,
     /// Arena that lives for the duration of this invocation.
     allocator: std.mem.Allocator,
     /// Name of the root command, used as the "prog:" prefix on messages.

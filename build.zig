@@ -4,33 +4,16 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const cli_mod = b.addModule("cli", .{
+    const cli_mod = b.createModule(.{
         .root_source_file = b.path("cli/root.zig"),
         .target = target,
         .optimize = optimize,
     });
 
-    const log_mod = b.addModule("log", .{
+    const log_mod = b.createModule(.{
         .root_source_file = b.path("logger/root.zig"),
         .target = target,
         .optimize = optimize,
-    });
-
-    // Nusku commands
-    const commands_mod = b.addModule("commands", .{
-        .root_source_file = b.path("src/cmd/root.zig"),
-        .target = target,
-        .optimize = optimize,
-        .imports = &.{
-            .{
-                .name = "cli",
-                .module = cli_mod,
-            },
-            .{
-                .name = "log",
-                .module = log_mod,
-            },
-        },
     });
 
     const exe = b.addExecutable(.{
@@ -39,23 +22,10 @@ pub fn build(b: *std.Build) void {
             .root_source_file = b.path("src/main.zig"),
             .target = target,
             .optimize = optimize,
-            .imports = &.{
-                .{
-                    .name = "commands",
-                    .module = commands_mod,
-                },
-                .{
-                    .name = "cli",
-                    .module = cli_mod,
-                },
-                .{
-                    .name = "log",
-                    .module = log_mod,
-                },
-            },
         }),
     });
-
+    exe.root_module.addImport("cli", cli_mod);
+    exe.root_module.addImport("log", log_mod);
     b.installArtifact(exe);
 
     const run_step = b.step("run", "Run the app");

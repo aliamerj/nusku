@@ -1,10 +1,10 @@
 const std = @import("std");
 const cli = @import("cli");
 const log = @import("log");
-const commands = @import("commands");
+const cmd = @import("cmd/root.zig");
 
 pub fn main(init: std.process.Init) u8 {
-    const root = commands.root;
+    const root = cmd.root;
     const arena = init.arena.allocator();
 
     // Drop argv[0]: the framework only wants what the user typed after it.
@@ -28,6 +28,7 @@ pub fn main(init: std.process.Init) u8 {
 
     return cli.execute(&root, argv, .{
         .allocator = init.gpa,
+        .io = init.io,
         .stderr = &err.interface,
         .stdout = &out.interface,
         .env = cli.EnvLookup.fromMap(init.environ_map),

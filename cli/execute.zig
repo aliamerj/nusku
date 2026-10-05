@@ -15,6 +15,7 @@ const help = @import("help.zig");
 const errors = @import("errors.zig");
 
 pub const Options = struct {
+    io: std.Io,
     /// Backing allocator. `execute` makes an arena from it per invocation.
     allocator: std.mem.Allocator,
     stdout: *std.Io.Writer,
@@ -65,6 +66,7 @@ fn run(arena: std.mem.Allocator, root: *const command.Command, argv: []const []c
     }
 
     var ctx: command.Context = .{
+        .io = opts.io,
         .allocator = arena,
         .prog = root.name,
         .stdout = opts.stdout,
