@@ -1,5 +1,6 @@
 const std = @import("std");
 const cli = @import("cli");
+const log = @import("log");
 const commands = @import("commands");
 
 pub fn main(init: std.process.Init) u8 {
@@ -15,6 +16,15 @@ pub fn main(init: std.process.Init) u8 {
     var err_buf: [1024]u8 = undefined;
     var out = std.Io.File.stdout().writer(init.io, &out_buf);
     var err = std.Io.File.stderr().writer(init.io, &err_buf);
+
+    var logger = log.Logger.init(.{
+        .writer = &err.interface,
+        .io = init.io,
+        .color = log.shouldColor(init.io, std.Io.File.stderr(), init.environ_map.get("NO_COLOR") != null),
+    });
+
+    log.setDefault(&logger);
+    defer log.clearDefault();
 
     return cli.execute(&root, argv, .{
         .allocator = init.gpa,

@@ -10,6 +10,12 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    const log_mod = b.addModule("log", .{
+        .root_source_file = b.path("logger/root.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
     // Nusku commands
     const commands_mod = b.addModule("commands", .{
         .root_source_file = b.path("src/cmd/root.zig"),
@@ -19,6 +25,10 @@ pub fn build(b: *std.Build) void {
             .{
                 .name = "cli",
                 .module = cli_mod,
+            },
+            .{
+                .name = "log",
+                .module = log_mod,
             },
         },
     });
@@ -34,7 +44,14 @@ pub fn build(b: *std.Build) void {
                     .name = "commands",
                     .module = commands_mod,
                 },
-                .{ .name = "cli", .module = cli_mod },
+                .{
+                    .name = "cli",
+                    .module = cli_mod,
+                },
+                .{
+                    .name = "log",
+                    .module = log_mod,
+                },
             },
         }),
     });
