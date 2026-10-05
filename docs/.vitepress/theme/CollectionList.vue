@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { withBase } from 'vitepress'
 
 const props = defineProps<{
   folder: 'documentation' | 'devlog'
@@ -33,7 +34,7 @@ const entries = computed<Entry[]>(() => Object.entries(files)
   .map(([path, source]) => ({
     title: titleFrom(path),
     excerpt: excerptFrom(source),
-    href: path.replace(/\.md$/, ''),
+    href: withBase(path.replace(/\.md$/, '')),
     date: dateFrom(source)
   }))
   .sort((a, b) => {
