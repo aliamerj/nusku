@@ -1,0 +1,6 @@
+# Nusku is primarily a Zig project
+*.zig linguist-language=Zig
+*.zon linguist-language=Zig
+
+# Vendored third-party dependencies
+third_party/libbpf/** linguist-vendored

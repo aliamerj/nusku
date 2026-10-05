@@ -1,5 +1,6 @@
 const std = @import("std");
 const log = @import("log");
+
 const slog = log.scope("agent_client");
 
 pub const Metric = enum { cpu, offcpu, mem, io, net, locks, sched };

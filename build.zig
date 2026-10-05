@@ -16,6 +16,18 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    const agent_mod = b.createModule(.{
+        .root_source_file = b.path("agent/root.zig"),
+        .target = target,
+        .optimize = optimize,
+        .link_libc = true,
+    });
+
+    agent_mod.addIncludePath(b.path("third_party/libbpf/include"));
+    agent_mod.addObjectFile(b.path("third_party/libbpf/lib/libbpf.a"));
+    agent_mod.linkSystemLibrary("elf", .{});
+    agent_mod.linkSystemLibrary("z", .{});
+
     const exe = b.addExecutable(.{
         .name = "nusku",
         .root_module = b.createModule(.{
@@ -26,6 +38,8 @@ pub fn build(b: *std.Build) void {
     });
     exe.root_module.addImport("cli", cli_mod);
     exe.root_module.addImport("log", log_mod);
+    exe.root_module.addImport("agent", agent_mod);
+
     b.installArtifact(exe);
 
     const run_step = b.step("run", "Run the app");
