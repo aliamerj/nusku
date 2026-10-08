@@ -1,7 +1,8 @@
 ---
 date: 2026-10-06
 ---
-# Components & Architecture
+# Ep3: Components & Architecture
+
 After we complete the infrastructure code that we need in this project, we can move one to next task which is the architecture of this project,
 i was thinking how we should do this project , and reading different projects architectures, i have good idea of what we going to do.
 
