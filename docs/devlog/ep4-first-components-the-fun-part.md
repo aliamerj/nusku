@@ -1,3 +1,7 @@
+---
+date: 2026-10-07
+---
+
 # Ep4 First component: the fun part (Agent)
 
 So our first component is **Agent**: as we talked about, the agent in short is the component that runs next to a profiled process, collects data, and streams it out.

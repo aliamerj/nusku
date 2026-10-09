@@ -4,3 +4,5 @@
 /docs/.vitepress/cache/
 /docs/node_modules/
 /zig-pkg
+/agent/out
+/agent/.zig-cache

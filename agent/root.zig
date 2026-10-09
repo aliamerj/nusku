@@ -1,5 +1,3 @@
-pub const libbpf = @import("libbpf.zig");
+const ebp = @import("ebpf");
 
-test {
-    _ = libbpf;
-}
+pub fn game() void {}
