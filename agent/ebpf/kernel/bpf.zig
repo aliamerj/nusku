@@ -9,6 +9,8 @@ pub const BPF = struct {
         pub const TYPE = struct {
             /// stores key/value pairs, like a hash table.
             pub const HASH = 1;
+            /// fixed-size BPF map where key 0 always accesses the single slot
+            pub const ARRAY = 2;
             /// special BPF map for storing stack traces.
             pub const STACK_TRACE = 7;
         };

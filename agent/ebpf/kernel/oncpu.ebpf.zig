@@ -41,7 +41,7 @@ const StackKey = extern struct {
 /// Slot 0 holds the tgid to profile; 0 means "profile nothing"
 /// Holds the PID we want to profile
 export var target_pid: MapDef linksection(".maps") = .{
-    .map_type = BPF.MAP.TYPE.HASH,
+    .map_type = BPF.MAP.TYPE.ARRAY,
     .key_size = 4,
     .value_size = 4,
     .max_entries = 1,
@@ -69,7 +69,7 @@ export var counts: MapDef linksection(".maps") = .{
 
 /// save each unique stack once, then count how many samples match it.
 /// attach it on perf_even
-export fn onCpusample(ctx: *anyopaque) linksection("perf_even") c_int {
+export fn onCpusample(ctx: *anyopaque) linksection("perf_event") c_int {
     var zero: u32 = 0;
 
     const target_ptr = bpf_map_lookup_elem(&target_pid, &zero);

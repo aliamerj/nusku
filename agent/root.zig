@@ -1,3 +1,5 @@
-const ebp = @import("ebpf");
+const std = @import("std");
 
-pub fn game() void {}
+test "test the tests in root " {
+    try std.testing.expectEqual(1, 1);
+}
